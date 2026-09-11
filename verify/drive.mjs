@@ -416,9 +416,14 @@ try {
 
   await page.eval(`window.getSelection()?.removeAllRanges()`)
   await sleep(200)
+  // Frame the bubble itself, not the full-width row: the row is mostly empty
+  // space to the left of a right-aligned message.
   step('screenshot-sent', { path: await shoot(page, 'sent-message', await page.eval(`(() => {
-    const r = document.querySelector('.lp-user-row')?.getBoundingClientRect()
-    return r ? { x: r.x, y: r.y, width: r.width, height: r.height } : null
+    const stack = document.querySelector('.lp-user-stack')?.getBoundingClientRect()
+    const row = document.querySelector('.lp-user-row')?.getBoundingClientRect()
+    if (stack === undefined || row === undefined) return null
+    // Keep the author's own action row (clock + copy) in frame under the bubble.
+    return { x: stack.x, y: row.y, width: stack.width, height: row.height }
   })()`) ) })
 
   // ---- settings section ----

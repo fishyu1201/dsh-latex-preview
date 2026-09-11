@@ -64,6 +64,8 @@ DeepSeek Harness 输入框的 LaTeX 实时预览。在聊天框里键入 `$…$`
 
 ## 已发送的消息
 
+![已发送的消息：公式已排版，时间与复制按钮保持原样](assets/sent-message.png)
+
 发出去的消息同样排版：气泡里的公式按最终呈现的样子显示，而不是 `$…$` 原文。
 
 气泡本身仍是 shell 的排版语言——布局尺寸、附件卡片、时间与复制按钮都取自 shell 自己的
@@ -74,6 +76,8 @@ DeepSeek Harness 输入框的 LaTeX 实时预览。在聊天框里键入 `$…$`
 设置里「已发送消息也排版公式」可以关掉。
 
 ## 复制公式
+
+![KaTeX 无法解析的公式：标出出错的原文，并附上 KaTeX 自己的报错](assets/error-check.png)
 
 选中已排版的公式复制时，写进剪贴板的是它的 LaTeX 源码，而不是排版后的字形。
 
@@ -141,6 +145,8 @@ node scripts/install.mjs --remove   # 卸载
 - **预览最大高度 (px)**——180 / 280 / 400。超出后预览内部滚动，不会挤压对话区域；
   聚焦台会把正在编辑的公式保持在可视范围内，但不会和你主动的滚动较劲。
 
+![设置面板：四个开关与高度选择](assets/settings.png)
+
 偏好保存在 `localStorage` 的 `dsh-latex-preview:prefs:v1`。
 
 ## 实现
@@ -161,9 +167,10 @@ node scripts/install.mjs --remove   # 卸载
 两条规则保证插件不会打扰它寄居的应用：
 
 1. **样式完全隔离。** `scripts/gen-fonts.mjs` 会重写 KaTeX 样式表，让所有选择器都落在
-   `.lp-root` 之下，并把字体族改名为 `LPKaTeX_*`。对话正文自己的 KaTeX 渲染不受影响。
-2. **运行时不引入新依赖。** 构建产物 `client.js` 只 require `react` 和 `react/jsx-runtime`，
-   两者都由 shell 的静态模块表提供，因此插件与 shell 共用同一个 React 实例。
+   `.lp-scope` 之下，并把字体族改名为 `LPKaTeX_*`。对话正文自己的 KaTeX 渲染不受影响。
+2. **运行时不引入新依赖。** 构建产物 `client.js` 只 require `react`、`react/jsx-runtime` 和
+   `@deepseek-ai/dsh-client-ui-primitives`——三者都由 shell 的静态模块表提供，因此插件与 shell
+   共用同一个 React 实例和同一套控件，而不是各带一份副本。
 
 20 个 KaTeX woff2 字体以 data URI 内嵌（约 360 KB）。预览可以离线排版，也不依赖前端那些
 会随版本变化的资源哈希名。
@@ -173,7 +180,7 @@ node scripts/install.mjs --remove   # 卸载
 ```sh
 npm install
 npm run build     # 重新生成字体，然后打包 client.js
-npm test          # 40 个测试：扫描器单测 + 构建产物集成测试
+npm test          # 57 个测试：扫描器单测、复制序列化、构建产物集成
 ```
 
 `npm test` 会把构建好的 `client.js` 放进 jsdom，走真实的模块加载信封执行，跑 `apply()`，

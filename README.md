@@ -30,9 +30,11 @@ composer's text is byte-identical to what was typed.
 
 Skipped, so a shell snippet never becomes a formula:
 
-- fenced code blocks (``` ``` ``` / `~~~`, three or more markers)
-- inline code spans (`` `…` ``, matching run length)
+- fenced code blocks (three or more backticks or tildes opening a line)
+- inline code spans (a matching run length of backticks)
 - escaped delimiters (`\$`)
+
+![A formula KaTeX cannot parse, flagged with the offending source and KaTeX's own message](assets/error-check.png)
 
 Reported before you send:
 
@@ -69,6 +71,8 @@ formula carries a tint in the proof below, so your eye can hold both.
 ```
 
 ## Sent messages
+
+![A sent message whose math is typeset, with its clock and copy action intact](assets/sent-message.png)
 
 Messages you have already sent are typeset too: the formula in the bubble is shown
 as it will read, not as `$…$` source.
@@ -151,13 +155,15 @@ Set `DSH_PROFILE` to target another profile.
 
 Settings → **LaTeX 预览**:
 
-- **启用预览** — master switch. Off renders nothing and changes nothing.
-- **聚焦正在编辑的公式** — the caret bench. Off leaves the proof alone.
+- **Enable preview** — master switch. Off renders nothing and changes nothing.
+- **Focus the formula being edited** — the caret bench. Off leaves the proof alone.
 - **Typeset formulas in sent messages** — off returns your own messages to source.
 - **Copy formulas as LaTeX source** — off restores the browser's default copy.
 - **Maximum preview height (px)** — 180 / 280 / 400. Taller drafts scroll inside the
   panel rather than pushing the transcript, and the bench keeps the formula you are
   editing inside the visible band without fighting a deliberate scroll.
+
+![The settings section: four switches and the height choice](assets/settings.png)
 
 Preferences persist in `localStorage` under `dsh-latex-preview:prefs:v1`.
 
@@ -175,17 +181,23 @@ A client-only DSH plugin. The host half exists so the loader row resolves and
   gives the offset natively; `<br>` soft breaks are counted explicitly because
   range text omits them. Every failure mode is silent: a caret that cannot be
   resolved costs the bench, never the preview.
+- `src/client/copy-latex.js` — the copy interceptor. Snaps a selection's
+  boundaries out to whole formulas on a copy of the range, then replaces each
+  `.katex` subtree with its TeX annotation.
 - `src/client/dock.jsx` — the `conversation.input.dock` entry.
+- `src/client/user-message.jsx` — the `conversation.chat.node` renderer for the
+  `user` and `steering` kinds: the shell's own bubble, with math typeset.
 - `src/client/settings.jsx` — the `settings.section` entry.
 
 Two rules keep the plugin from disturbing the app it lives in:
 
 1. **Scoped styles.** `scripts/gen-fonts.mjs` rewrites the KaTeX stylesheet so
-   every selector sits under `.lp-root` and every font family is renamed
+   every selector sits under `.lp-scope` and every font family is renamed
    `LPKaTeX_*`. The transcript's own KaTeX rendering is untouched.
 2. **No new dependencies at runtime.** The built `client.js` requires only
-   `react` and `react/jsx-runtime`, both served from the shell's static module
-   table, so the plugin shares the shell's React instance.
+   `react`, `react/jsx-runtime` and `@deepseek-ai/dsh-client-ui-primitives` — all
+   served from the shell's static module table, so the plugin shares the shell's
+   React instance and its controls rather than bundling copies.
 
 The 20 KaTeX woff2 faces are embedded as data URIs (~360 KB). The preview
 typesets offline and does not depend on the frontend's hashed asset names, which
@@ -196,7 +208,7 @@ move between Harness releases.
 ```sh
 npm install
 npm run build     # regenerate fonts, then bundle client.js
-npm test          # 40 tests: scanner units + built-bundle integration
+npm test          # 57 tests: scanner units, copy serializer, built bundle
 ```
 
 `npm test` loads the built `client.js` in jsdom through the real module-loader
