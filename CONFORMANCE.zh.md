@@ -173,6 +173,31 @@ shell 的消息 UI，而是从 fork 者只能靠猜的那些来源重建它—�
 
 代价是真实存在、也必须说清的：如果未来的 Harness 版本给用户消息加了新 UI，这个渲染器不会自动继承。
 
+## 插件市场上架
+
+按 [awesome-dsh-plugin 贡献指南](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/blob/main/contributing.md)
+准备——DSH 插件市场读取的正是这份目录。
+
+| 要求 | 状态 |
+|---|---|
+| `package.json` 声明 `dsh.bundle` | ✅ 同时声明了 `dsh.client.platform: web` |
+| 旁边有 `cordis.patch.yml`，行内用包名引用 | ✅ |
+| 真实可用的代码 | ✅ 57 个测试；全新 clone 可安装、可启动、通过浏览器验证 |
+| 仓库添加 `dsh-plugin` topic | ⏳ 首次推送后在 GitHub 上设置 |
+| 仓库创建满 1 天 | ⏳ 由仓库自身年龄满足 |
+| 描述实事求是、无营销词 | ✅ 一行，每条声明都对得上已验证的行为 |
+| 分类贴合实际做的事 | ✅ `ui`——输入框与对话呈现 |
+| 官方 `@deepseek-ai/*` 用 `peerDependencies` 而非 `dependencies` | ✅ `dependencies` 里一个都没有；peer 为 optional 且范围带预发布分支 |
+| 不是纯聚合包 | ✅ 自带行为 |
+
+打包上有两点是刻意的：
+
+- **构建产物 `client.js` 已提交进仓库。** 指南建议发 npm 或挂 release tarball，好让 git 安装跳过
+  pnpm 的 `allowBuilds` 授权。直接提交构建产物殊途同归：`dsh plugin add github:…` 不跑任何构建，
+  也就没有东西需要授权。挂 tarball 只会多出一个需要同步维护的发布物，没有额外收益，所以没做。
+- **删掉了 `dsh.plugin.json`。** 包里原本有这么一个文件，但没有任何东西读它——Harness 加载器不读，
+  市场也不读。清单契约是 `package.json#dsh`，而 `@deepseek-ai/dsh-package-manifest` 不接受这个键。
+
 ## 不适用
 
 以下各项是核过之后有意不做的，写在这里以免后来的复核者把它读成疏漏：

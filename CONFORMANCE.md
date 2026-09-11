@@ -211,6 +211,35 @@ involved.
 The cost is real and stated: if a future Harness release adds UI to user messages,
 this renderer will not inherit it.
 
+## Marketplace listing
+
+Prepared against the
+[awesome-dsh-plugin contributing guide](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/blob/main/contributing.md),
+which is the catalogue the DSH plugin market reads.
+
+| Requirement | Status |
+|---|---|
+| `package.json` declares `dsh.bundle` | ✅ plus `dsh.client.platform: web` |
+| `cordis.patch.yml` beside it, row by package name | ✅ |
+| Real, working code | ✅ 57 tests; a fresh clone installs, boots and passes the browser run |
+| `dsh-plugin` topic on the repo | ⏳ set on GitHub after the first push |
+| Repo at least 1 day old | ⏳ satisfied by the repo's own age |
+| Description states what it does, no superlatives | ✅ one line, every claim mapped to a verified behaviour |
+| Category matches what it does | ✅ `ui` — composer and transcript presentation |
+| Official `@deepseek-ai/*` as `peerDependencies`, not `dependencies` | ✅ none in `dependencies`; peers are optional with prerelease-bearing ranges |
+| Not a meta-package | ✅ ships its own behaviour |
+
+Two notes on the packaging, both deliberate:
+
+- **The built `client.js` is committed.** The guide recommends npm or a release
+  tarball so a git install skips pnpm's `allowBuilds` approval. Committing the
+  build reaches the same end directly: `dsh plugin add github:…` runs no build
+  step, so there is nothing to approve. A tarball would add a release artifact to
+  keep in sync for no additional benefit, so there is none.
+- **`dsh.plugin.json` was removed.** The package shipped one; nothing reads it —
+  not the Harness loader, not the market. The manifest contract is `package.json#dsh`,
+  and `@deepseek-ai/dsh-package-manifest` accepts no such key.
+
 ## Not applicable
 
 Checked and deliberately absent, so a later reviewer does not read the omission as

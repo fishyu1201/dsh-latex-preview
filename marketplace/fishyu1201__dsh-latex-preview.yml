@@ -1,0 +1,6 @@
+url: https://github.com/fishyu1201/dsh-latex-preview
+name: fishyu1201/dsh-latex-preview
+category: ui
+description:
+  en: 'Live LaTeX preview in the composer with pre-send error checks, typeset sent messages, and copy-as-LaTeX for any selection that touches a formula. The message text itself is never rewritten.'
+  zh: '在输入框上方实时排版 LaTeX 并在发送前提示语法错误；已发送的消息也排版；选中任何包含公式的内容复制都得到 LaTeX 源码。消息本身从不被改写。'
