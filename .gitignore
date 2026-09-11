@@ -1,0 +1,11 @@
+node_modules/
+.npm-cache/
+.pnpm-store/
+.chrome-verify/
+.verify-home/
+.verify-workspace/
+verify/*.png
+verify/report.json
+*.tgz
+.DS_Store
+.npmrc

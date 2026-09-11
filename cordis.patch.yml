@@ -1,0 +1,8 @@
+# dsh-latex-preview bundle patch: inserts the composer preview row.
+#
+# The plugin is client-only — it mounts a browser dock and a settings section and
+# registers nothing on the host — but the loader needs a row so that the package
+# is scanned, which is how `dsh.client` is discovered and `client.js` served.
+- insert:
+    - id: dsh-latex-preview
+      name: 'dsh-latex-preview'

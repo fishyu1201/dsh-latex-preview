@@ -1,0 +1,104 @@
+{
+  "name": "dsh-latex-preview",
+  "version": "0.1.0",
+  "description": "Live LaTeX preview in the DeepSeek Harness composer: math typesets as you type, sent messages are typeset too, and copying a formula yields its LaTeX source. The message itself is never rewritten.",
+  "license": "MIT",
+  "author": "fishyu1201",
+  "type": "module",
+  "main": "./src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./client": "./client.js",
+    "./package.json": "./package.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fishyu1201/dsh-latex-preview.git"
+  },
+  "homepage": "https://github.com/fishyu1201/dsh-latex-preview#readme",
+  "bugs": {
+    "url": "https://github.com/fishyu1201/dsh-latex-preview/issues"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-client-ui-primitives",
+        "@deepseek-ai/dsh-client-locale"
+      ],
+      "external": [
+        "react",
+        "react/jsx-runtime",
+        "@deepseek-ai/dsh-client-ui-primitives"
+      ]
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-client-locale": ">=0.1.5-rc.1 <0.2.0-0",
+    "@deepseek-ai/dsh-client-ui-conversation": ">=0.1.5-rc.1 <0.2.0-0",
+    "@deepseek-ai/dsh-client-ui-primitives": ">=0.1.5-rc.1 <0.2.0-0",
+    "@deepseek-ai/dsh-client-ui-settings": ">=0.1.5-rc.1 <0.2.0-0",
+    "@deepseek-ai/dsh-client-ui-slots": ">=0.1.5-rc.1 <0.2.0-0",
+    "react": ">=18.2.0 <19.0.0-0"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/dsh-client-locale": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-client-ui-conversation": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-client-ui-primitives": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-client-ui-settings": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-client-ui-slots": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
+  },
+  "files": [
+    "src",
+    "assets",
+    "scripts",
+    "client.js",
+    "cordis.patch.yml",
+    "README.md",
+    "README.zh.md",
+    "CONFORMANCE.md",
+    "CONFORMANCE.zh.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node scripts/gen-fonts.mjs && node build.mjs",
+    "test": "node --test \"test/**/*.test.mjs\"",
+    "check": "npm run build && npm test"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "latex",
+    "katex",
+    "math",
+    "preview",
+    "composer"
+  ],
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "jsdom": "^30.0.1",
+    "katex": "^0.16.28",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
